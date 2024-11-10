@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Genetics Probability Calculator</title>
+  <style>
+    /* General Reset */
+    body, h1, h2, p, ul, li {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f7f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    header {
+      background-color: #004e92;
+      color: #ffffff;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    /* Main Content Styling */
+    main {
+      max-width: 1100px;
+      width: 95%;
+      margin-top: 40px;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    section {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.3s ease-in-out, transform 0.2s ease;
+      text-align: center;
+    }
+
+    section:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      transform: translateY(-8px);
+    }
+
+    h2 {
+      color: #004e92;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    input, select, button {
+      padding: 12px 18px;
+      font-size: 1rem;
+      border-radius: 8px;
+      margin-top: 10px;
+      width: 100%;
+      max-width: 350px;
+    }
+
+    select {
+      border: 1px solid #ddd;
+    }
+
+    button {
+      background-color: #004e92;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #00376b;
+      transform: translateY(-3px);
+    }
+
+    .output {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: #333;
+      font-weight: bold;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #ffffff;
+      color: #004e92;
+      width: 100%;
+      border-radius: 10px;
+      margin-top: 40px;
+      box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.1);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        padding: 1rem 1.5rem;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      main {
+        grid-template-columns: 1fr;
+        margin-top: 20px;
+      }
+
+      section {
+        padding: 15px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      button, select, input {
+        max-width: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Genetics Probability Calculator</h1>
+  </header>
+
+  <main>
+    <section>
+      <h2>Parent Traits</h2>
+
+      <!-- Parent 1 Input -->
+      <label for="parent1">Parent 1 Genotype:</label>
+      <select id="parent1">
+        <option value="AA">AA (Homozygous Dominant)</option>
+        <option value="Aa">Aa (Heterozygous)</option>
+        <option value="aa">aa (Homozygous Recessive)</option>
+      </select>
+
+      <!-- Parent 2 Input -->
+      <label for="parent2">Parent 2 Genotype:</label>
+      <select id="parent2">
+        <option value="AA">AA (Homozygous Dominant)</option>
+        <option value="Aa">Aa (Heterozygous)</option>
+        <option value="aa">aa (Homozygous Recessive)</option>
+      </select>
+
+      <!-- Calculate Button -->
+      <button onclick="calculateProbability()">Calculate Probability</button>
+
+      <!-- Output -->
+      <div class="output" id="result"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Genetics Probability Calculator</p>
+  </footer>
+
+  <script>
+    // Function to calculate genetics probability
+    function calculateProbability() {
+      const parent1 = document.getElementById("parent1").value;
+      const parent2 = document.getElementById("parent2").value;
+      const result = document.getElementById("result");
+
+      // Mendelian inheritance probabilities
+      let probabilities = {
+        "AA-AA": "100% AA (Homozygous Dominant)",
+        "AA-Aa": "50% AA, 50% Aa (Heterozygous)",
+        "AA-aa": "100% Aa (Heterozygous)",
+        "Aa-Aa": "25% AA, 50% Aa, 25% aa",
+        "Aa-aa": "50% Aa, 50% aa",
+        "aa-aa": "100% aa (Homozygous Recessive)"
+      };
+
+      let key = parent1 + "-" + parent2;
+      result.innerHTML = probabilities[key] || "Invalid Input or No Probability Available";
+    }
+  </script>
+</body>
+</html>

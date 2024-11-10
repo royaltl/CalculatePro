@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parametric and Polar Plotter</title>
+  <style>
+    /* General Reset */
+    body, h1, h2, p, input, button, canvas {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f7f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* Header */
+    header {
+      background-color: #004e92;
+      color: #ffffff;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+      max-width: 800px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    /* Main Section */
+    main {
+      background-color: #ffffff;
+      padding: 20px;
+      width: 100%;
+      max-width: 800px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #004e92;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+    }
+
+    .plotter {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+    }
+
+    label {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #004e92;
+    }
+
+    input {
+      width: 100%;
+      max-width: 300px;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-top: 5px;
+    }
+
+    button {
+      padding: 12px 18px;
+      background-color: #004e92;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #00376b;
+      transform: translateY(-3px);
+    }
+
+    canvas {
+      margin-top: 20px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        padding: 1.5rem 1rem;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      main {
+        padding: 15px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Parametric & Polar Plotter</h1>
+  </header>
+
+  <main>
+    <h2>Plot Parametric & Polar Equations</h2>
+    <div class="plotter">
+      <label for="parametric">Parametric Equation (x, y): </label>
+      <input type="text" id="parametric-x" placeholder="x(t) e.g., cos(t)">
+      <input type="text" id="parametric-y" placeholder="y(t) e.g., sin(t)">
+      
+      <label for="polar">Polar Equation: </label>
+      <input type="text" id="polar" placeholder="r(θ) e.g., cos(θ)">
+      
+      <button onclick="plotParametric()">Plot Parametric</button>
+      <button onclick="plotPolar()">Plot Polar</button>
+      <canvas id="graphCanvas" width="600" height="400"></canvas>
+    </div>
+  </main>
+
+  <script>
+    function plotParametric() {
+      const canvas = document.getElementById('graphCanvas');
+      const ctx = canvas.getContext('2d');
+      const xFunc = document.getElementById('parametric-x').value;
+      const yFunc = document.getElementById('parametric-y').value;
+
+      if (!xFunc.trim() || !yFunc.trim()) {
+        alert("Please enter both parametric functions.");
+        return;
+      }
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawAxes(ctx, canvas.width, canvas.height);
+
+      try {
+        const xCompiled = math.compile(xFunc);
+        const yCompiled = math.compile(yFunc);
+
+        ctx.beginPath();
+        ctx.strokeStyle = "#004e92";
+
+        for (let t = -10; t <= 10; t += 0.05) {
+          const x = xCompiled.evaluate({ t });
+          const y = yCompiled.evaluate({ t });
+
+          const canvasX = mapRange(x, -2, 2, 0, canvas.width);
+          const canvasY = mapRange(y, -2, 2, canvas.height, 0);
+
+          if (t === -10) ctx.moveTo(canvasX, canvasY);
+          else ctx.lineTo(canvasX, canvasY);
+        }
+
+        ctx.stroke();
+      } catch (error) {
+        alert("Invalid parametric function.");
+      }
+    }
+
+    function plotPolar() {
+      const canvas = document.getElementById('graphCanvas');
+      const ctx = canvas.getContext('2d');
+      const polarFunc = document.getElementById('polar').value;
+
+      if (!polarFunc.trim()) {
+        alert("Please enter a polar function.");
+        return;
+      }
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawAxes(ctx, canvas.width, canvas.height);
+
+      try {
+        const polarCompiled = math.compile(polarFunc);
+
+        ctx.beginPath();
+        ctx.strokeStyle = "#FF5733";
+
+        for (let theta = 0; theta <= 2 * Math.PI; theta += 0.01) {
+          const r = polarCompiled.evaluate({ θ: theta });
+          const x = r * Math.cos(theta);
+          const y = r * Math.sin(theta);
+
+          const canvasX = mapRange(x, -2, 2, 0, canvas.width);
+          const canvasY = mapRange(y, -2, 2, canvas.height, 0);
+
+          if (theta === 0) ctx.moveTo(canvasX, canvasY);
+          else ctx.lineTo(canvasX, canvasY);
+        }
+
+        ctx.stroke();
+      } catch (error) {
+        alert("Invalid polar function.");
+      }
+    }
+
+    function drawAxes(ctx, width, height) {
+      ctx.beginPath();
+      ctx.strokeStyle = "#000";
+      ctx.lineWidth = 1;
+
+      // X-Axis
+      ctx.moveTo(0, height / 2);
+      ctx.lineTo(width, height / 2);
+
+      // Y-Axis
+      ctx.moveTo(width / 2, 0);
+      ctx.lineTo(width / 2, height);
+
+      ctx.stroke();
+    }
+
+    function mapRange(value, inMin, inMax, outMin, outMax) {
+      return ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
+    }
+
+    // Include Math.js for complex calculations
+    const script = document.createElement('script');
+    script.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.3.0/math.min.js";
+    document.body.appendChild(script);
+  </script>
+</body>
+</html>

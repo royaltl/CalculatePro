@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Systems of Equations Solver</title>
+  <style>
+    /* General Reset */
+    body, h1, h2, p, input, button {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f7f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex-direction: column;
+      padding: 20px;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    /* Header */
+    header {
+      background-color: #004e92;
+      color: #ffffff;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+      max-width: 800px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    header p {
+      font-size: 1.2rem;
+    }
+
+    /* Main Section */
+    main {
+      background-color: #ffffff;
+      padding: 20px;
+      width: 100%;
+      max-width: 800px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #004e92;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+    }
+
+    .equation-input {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+    }
+
+    label {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #004e92;
+    }
+
+    input, select {
+      width: 100%;
+      max-width: 350px;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-top: 5px;
+    }
+
+    button {
+      padding: 12px 18px;
+      background-color: #004e92;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #00376b;
+      transform: translateY(-3px);
+    }
+
+    p#result {
+      margin-top: 10px;
+      font-size: 1.2rem;
+      color: #004e92;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        padding: 1.5rem 1rem;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      main {
+        padding: 15px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      input, select {
+        width: 100%;
+        max-width: 250px;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Systems of Equations Solver</h1>
+  </header>
+
+  <main>
+    <h2>Solving Systems of Linear Equations</h2>
+    <div class="equation-input">
+      <label for="equations">Enter the system of equations (e.g., a1x + b1y = c1, a2x + b2y = c2):</label>
+      <textarea id="equations" rows="5" placeholder="a1x + b1y = c1, a2x + b2y = c2"></textarea>
+
+      <label for="num-equations">Number of Variables (e.g., 2 for x and y, 3 for x, y, z):</label>
+      <input type="number" id="num-equations" value="2" min="2" max="3">
+
+      <button onclick="solveEquations()">Solve System</button>
+
+      <p id="result"></p>
+    </div>
+  </main>
+
+  <script>
+    function parseEquation(equation, numVars) {
+      const regex = /([+-]?\d*\.*\d+)([a-z])\s*([\+-]?)\s*(\d*\.*\d+)?/g;
+      let parsed = [];
+      let match;
+
+      while (match = regex.exec(equation)) {
+        parsed.push({
+          coefficient: parseFloat(match[1]),
+          variable: match[2],
+          sign: match[3],
+          constant: match[4] ? parseFloat(match[4]) : 0
+        });
+      }
+
+      return parsed;
+    }
+
+    function solveEquations() {
+      const equationsText = document.getElementById('equations').value;
+      const numVars = parseInt(document.getElementById('num-equations').value);
+      const resultField = document.getElementById('result');
+      const equations = equationsText.split(',').map(eq => eq.trim());
+
+      let matrix = [];
+      let constants = [];
+
+      // Parse the equations into matrix form
+      for (let i = 0; i < equations.length; i++) {
+        const parsedEquation = parseEquation(equations[i], numVars);
+        let row = [];
+        let constant = 0;
+
+        for (let j = 0; j < numVars; j++) {
+          const varFound = parsedEquation.find(eq => eq.variable === String.fromCharCode(120 + j));
+          row.push(varFound ? varFound.coefficient : 0);
+          constant += varFound ? varFound.constant : 0;
+        }
+        
+        matrix.push(row);
+        constants.push(constant);
+      }
+
+      // Solve the system using Gaussian Elimination
+      const result = gaussianElimination(matrix, constants);
+      resultField.textContent = `Solution: x = ${result[0]}, y = ${result[1]}`;
+    }
+
+    function gaussianElimination(matrix, constants) {
+      const n = matrix.length;
+
+      // Forward Elimination
+      for (let i = 0; i < n; i++) {
+        let maxRow = i;
+        for (let j = i + 1; j < n; j++) {
+          if (Math.abs(matrix[j][i]) > Math.abs(matrix[maxRow][i])) {
+            maxRow = j;
+          }
+        }
+
+        [matrix[i], matrix[maxRow]] = [matrix[maxRow], matrix[i]];
+        [constants[i], constants[maxRow]] = [constants[maxRow], constants[i]];
+
+        for (let j = i + 1; j < n; j++) {
+          const factor = matrix[j][i] / matrix[i][i];
+          constants[j] -= factor * constants[i];
+          for (let k = i; k < n; k++) {
+            matrix[j][k] -= factor * matrix[i][k];
+          }
+        }
+      }
+
+      // Back Substitution
+      let solution = new Array(n).fill(0);
+      for (let i = n - 1; i >= 0; i--) {
+        let sum = constants[i];
+        for (let j = i + 1; j < n; j++) {
+          sum -= matrix[i][j] * solution[j];
+        }
+        solution[i] = sum / matrix[i][i];
+      }
+
+      return solution;
+    }
+  </script>
+</body>
+</html>

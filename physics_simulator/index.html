@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physics Simulator</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* General Reset */
+    body, h1, h2, p, ul, li {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f7f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex-direction: column;
+      padding: 20px;
+      margin: 0;
+      min-height: 100vh;
+      height: auto;
+    }
+
+    /* Header */
+    header {
+      background-color: #004e92;
+      color: #ffffff;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+      max-width: 800px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    header p {
+      font-size: 1.2rem;
+    }
+
+    /* Main Content Styling */
+    main {
+      background-color: #ffffff;
+      padding: 20px;
+      width: 100%;
+      max-width: 800px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #004e92;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+    }
+
+    .input-group {
+      margin: 15px 0;
+    }
+
+    label {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #004e92;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-top: 5px;
+      width: 100%;
+      max-width: 350px;
+    }
+
+    button {
+      padding: 12px 18px;
+      background-color: #004e92;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #00376b;
+      transform: translateY(-3px);
+    }
+
+    canvas {
+      margin-top: 30px;
+      max-width: 100%;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #ffffff;
+      color: #004e92;
+      width: 100%;
+      border-radius: 10px;
+      margin-top: 40px;
+      box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.1);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        padding: 1.5rem 1rem;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      main {
+        padding: 15px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      input {
+        max-width: 250px;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Physics Simulator</h1>
+    
+  </header>
+
+  <main>
+    <h2>Projectile Motion Simulation</h2>
+    <div class="input-group">
+      <label for="initial-velocity">Initial Velocity (m/s):</label>
+      <input type="number" id="initial-velocity" placeholder="e.g., 20" value="20">
+    </div>
+    <div class="input-group">
+      <label for="angle">Angle (degrees):</label>
+      <input type="number" id="angle" placeholder="e.g., 45" value="45">
+    </div>
+    <button onclick="simulateProjectile()">Simulate Projectile</button>
+
+    <h2>Projectile Path</h2>
+    <canvas id="projectile-canvas" width="600" height="400"></canvas>
+
+    <h2>Free Fall Simulation</h2>
+    <div class="input-group">
+      <label for="height">Height (m):</label>
+      <input type="number" id="height" placeholder="e.g., 50" value="50">
+    </div>
+    <button onclick="simulateFreeFall()">Simulate Free Fall</button>
+
+    <h2>Free Fall Motion</h2>
+    <canvas id="freefall-canvas" width="600" height="400"></canvas>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Physics Simulators</p>
+  </footer>
+
+  <script>
+    // Constants
+    const g = 9.81; // Gravity constant in m/s^2
+
+    // Function to simulate projectile motion
+    function simulateProjectile() {
+      const v0 = parseFloat(document.getElementById('initial-velocity').value); // Initial velocity
+      const angle = parseFloat(document.getElementById('angle').value) * Math.PI / 180; // Convert angle to radians
+
+      // Calculate time of flight, range, and max height
+      const tFlight = 2 * v0 * Math.sin(angle) / g;
+      const maxHeight = Math.pow(v0 * Math.sin(angle), 2) / (2 * g);
+      const range = Math.pow(v0, 2) * Math.sin(2 * angle) / g;
+
+      // Setup canvas for projectile motion
+      const canvas = document.getElementById('projectile-canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.beginPath();
+      ctx.moveTo(0, canvas.height);
+
+      for (let t = 0; t < tFlight; t += 0.1) {
+        const x = v0 * Math.cos(angle) * t;
+        const y = canvas.height - (v0 * Math.sin(angle) * t - 0.5 * g * t * t);
+        ctx.lineTo(x, y);
+      }
+
+      ctx.stroke();
+    }
+
+    // Function to simulate free fall motion
+    function simulateFreeFall() {
+      const h = parseFloat(document.getElementById('height').value); // Initial height
+
+      // Calculate time to reach the ground
+      const tFall = Math.sqrt(2 * h / g);
+
+      // Setup canvas for free fall motion
+      const canvas = document.getElementById('freefall-canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.beginPath();
+      ctx.moveTo(300, canvas.height);
+
+      for (let t = 0; t <= tFall; t += 0.1) {
+        const y = canvas.height - (0.5 * g * t * t);
+        ctx.lineTo(300, y);
+      }
+
+      ctx.stroke();
+    }
+  </script>
+</body>
+</html>

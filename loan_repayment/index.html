@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loan Repayment Calculator</title>
+  <style>
+    /* General Reset */
+    body, h1, h2, p, ul, li {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f7f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+      margin: 0;
+      min-height: 100vh;
+      height: auto;
+    }
+
+    /* Header */
+    header {
+      background-color: #004e92;
+      color: #ffffff;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    /* Main Content Styling */
+    main {
+      max-width: 1100px;
+      width: 95%;
+      margin-top: 40px;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    section {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.3s ease-in-out, transform 0.2s ease;
+      text-align: center;
+    }
+
+    section:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      transform: translateY(-8px);
+    }
+
+    h2 {
+      color: #004e92;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    input, select, button {
+      font-size: 1rem;
+      padding: 12px;
+      margin-bottom: 20px;
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+
+    button {
+      background-color: #004e92;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+
+    button:hover {
+      background-color: #003377;
+    }
+
+    .output {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f0f8ff;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      color: #004e92;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #ffffff;
+      color: #004e92;
+      width: 100%;
+      border-radius: 10px;
+      margin-top: 40px;
+      box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.1);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        padding: 1rem 1.5rem;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      main {
+        grid-template-columns: 1fr;
+        margin-top: 20px;
+      }
+
+      section {
+        padding: 15px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      input, select, button {
+        padding: 10px;
+      }
+
+      footer {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Loan Repayment Calculator</h1>
+  </header>
+
+  <main>
+    <!-- Loan Repayment Calculator -->
+    <section>
+      <h2>Calculate Your Loan Repayment</h2>
+      
+      <input type="number" id="loanAmount" placeholder="Enter loan amount (Principal)" required>
+      <input type="number" id="interestRate" placeholder="Enter annual interest rate (%)" required>
+      <input type="number" id="loanTerm" placeholder="Enter loan term (Years)" required>
+      
+      <label for="loanType">Loan Type:</label>
+      <select id="loanType">
+        <option value="fixed">Fixed-Rate Loan</option>
+        <option value="variable">Variable-Rate Loan</option>
+      </select>
+      
+      <button onclick="calculateLoanRepayment()">Calculate Repayment</button>
+      <div class="output" id="loanOutput"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Loan Repayment Calculator</p>
+  </footer>
+
+  <script>
+    function calculateLoanRepayment() {
+      const loanAmount = parseFloat(document.getElementById("loanAmount").value);
+      const interestRate = parseFloat(document.getElementById("interestRate").value) / 100 / 12;
+      const loanTerm = parseInt(document.getElementById("loanTerm").value) * 12; // Months
+      const loanType = document.getElementById("loanType").value;
+      const output = document.getElementById("loanOutput");
+
+      if (loanAmount && interestRate && loanTerm) {
+        let monthlyPayment;
+        
+        if (loanType === "fixed") {
+          // Fixed-rate loan formula: M = P[r(1 + r)^n] / [(1 + r)^n - 1]
+          monthlyPayment = (loanAmount * interestRate) / (1 - Math.pow(1 + interestRate, -loanTerm));
+        } else {
+          // Variable-rate loan (approximated, for simplicity we assume it works similarly)
+          monthlyPayment = (loanAmount * interestRate) / (1 - Math.pow(1 + interestRate, -loanTerm));
+        }
+
+        const totalRepayment = monthlyPayment * loanTerm;
+        const totalInterest = totalRepayment - loanAmount;
+
+        output.innerHTML = `
+          <p>Monthly Payment: ${monthlyPayment.toFixed(2)} USD</p>
+          <p>Total Repayment: ${totalRepayment.toFixed(2)} USD</p>
+          <p>Total Interest: ${totalInterest.toFixed(2)} USD</p>
+        `;
+      } else {
+        output.innerHTML = "Please enter valid values.";
+      }
+    }
+  </script>
+
+</body>
+</html>

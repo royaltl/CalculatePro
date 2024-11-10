@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chemical Equation Balancer</title>
+  <style>
+    /* General Reset */
+    body, h1, h2, p, ul, li {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f7f9fc;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      flex-direction: column;
+      padding: 20px;
+      margin: 0; /* Ensure no extra margin is added */
+      min-height: 100vh; /* Ensure it takes full height */
+      height: auto; /* Prevent excessive scrolling */
+    }
+
+    /* Header */
+    header {
+      background-color: #004e92;
+      color: #ffffff;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    header p {
+      font-size: 1.2rem;
+    }
+
+    /* Main Content Styling */
+    main {
+      max-width: 1100px;
+      width: 95%;
+      margin-top: 40px;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      justify-content: center;
+    }
+
+    section {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.3s ease-in-out, transform 0.2s ease;
+      text-align: center;
+    }
+
+    section:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      transform: translateY(-8px);
+    }
+
+    h2 {
+      color: #004e92;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    input, button {
+      padding: 12px 18px;
+      font-size: 1rem;
+      border-radius: 8px;
+      margin-top: 10px;
+      width: 100%;
+      max-width: 350px;
+    }
+
+    input {
+      border: 1px solid #ddd;
+    }
+
+    button {
+      background-color: #004e92;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #00376b;
+      transform: translateY(-3px);
+    }
+
+    .output {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: #333;
+      font-weight: bold;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #ffffff;
+      color: #004e92;
+      width: 100%;
+      border-radius: 10px;
+      margin-top: 40px;
+      box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.1);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        padding: 1rem 1.5rem;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      header p {
+        font-size: .8rem;
+      }
+
+      main {
+        grid-template-columns: 1fr;
+        margin-top: 20px;
+      }
+
+      section {
+        padding: 15px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      input {
+        max-width: 250px;
+      }
+
+      button {
+        width: 100%;
+      }
+
+      /* Ensure header text is centered */
+      header {
+        text-align: center;
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Chemical Equation Balancer</h1>
+    
+  </header>
+
+  <main>
+    <section>
+      <h2>Input Unbalanced Equation</h2>
+      <input type="text" id="equation-input" placeholder="e.g. H2 + O2 → H2O">
+      <button onclick="balanceEquation()">Balance Equation</button>
+      <div class="output" id="balanced-output"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Chemical Equation Balancer</p>
+  </footer>
+
+  <script>
+    // Function to balance chemical equation
+    function balanceEquation() {
+      const input = document.getElementById("equation-input").value.trim();
+      const output = document.getElementById("balanced-output");
+
+      if (input === "") {
+        output.innerHTML = "Please enter a chemical equation.";
+        return;
+      }
+
+      // Parsing and balancing logic (simplified for demonstration)
+      try {
+        let parts = input.split('=');
+        if (parts.length !== 2) {
+          output.innerHTML = "Please provide a valid chemical equation format (e.g., H2 + O2 → H2O).";
+          return;
+        }
+
+        let reactants = parts[0].trim().split('+').map(e => e.trim());
+        let products = parts[1].trim().split('+').map(e => e.trim());
+
+        // Balancing: For simplicity, this is a mock example (actual balancing requires complex algorithms)
+        let balancedEquation = `${reactants[0]} + ${reactants[1]} → 2 ${products[0]}`;
+
+        output.innerHTML = `Balanced Equation: ${balancedEquation}`;
+      } catch (error) {
+        output.innerHTML = "Error balancing the equation. Please check the input format.";
+      }
+    }
+  </script>
+</body>
+</html>

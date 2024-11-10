@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Regression Analysis Tool</title>
+  <style>
+    /* General Reset */
+    body, h1, h2, p, input, button {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f7f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex-direction: column;
+      padding: 20px;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    /* Header */
+    header {
+      background-color: #004e92;
+      color: #ffffff;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+      max-width: 800px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    header p {
+      font-size: 1.2rem;
+    }
+
+    /* Main Section */
+    main {
+      background-color: #ffffff;
+      padding: 20px;
+      width: 100%;
+      max-width: 800px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #004e92;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+    }
+
+    .input-group {
+      margin: 15px 0;
+    }
+
+    label {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #004e92;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-top: 5px;
+      width: 100%;
+      max-width: 350px;
+    }
+
+    button {
+      padding: 12px 18px;
+      background-color: #004e92;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #00376b;
+      transform: translateY(-3px);
+    }
+
+    p#result {
+      margin-top: 10px;
+      font-size: 1.2rem;
+      color: #004e92;
+    }
+
+    canvas {
+      margin-top: 30px;
+      max-width: 100%;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        padding: 1.5rem 1rem;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      main {
+        padding: 15px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      input {
+        max-width: 250px;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Regression Analysis Tool</h1>
+  </header>
+
+  <main>
+    <h2>Perform Linear Regression</h2>
+    <div class="input-group">
+      <label for="x-values">Enter X values (comma-separated):</label>
+      <input type="text" id="x-values" placeholder="e.g., 1, 2, 3, 4, 5">
+    </div>
+
+    <div class="input-group">
+      <label for="y-values">Enter Y values (comma-separated):</label>
+      <input type="text" id="y-values" placeholder="e.g., 2, 4, 5, 4, 5">
+    </div>
+
+    <button onclick="performRegression()">Perform Regression</button>
+
+    <p id="result"></p>
+    <canvas id="plotCanvas" width="400" height="400"></canvas>
+  </main>
+
+  <script>
+    function performRegression() {
+      const xValues = document.getElementById('x-values').value.split(',').map(num => parseFloat(num.trim()));
+      const yValues = document.getElementById('y-values').value.split(',').map(num => parseFloat(num.trim()));
+
+      if (xValues.length !== yValues.length || xValues.length < 2) {
+        document.getElementById('result').textContent = "Please ensure both X and Y have the same number of values.";
+        return;
+      }
+
+      // Perform linear regression
+      const n = xValues.length;
+      const sumX = xValues.reduce((acc, val) => acc + val, 0);
+      const sumY = yValues.reduce((acc, val) => acc + val, 0);
+      const sumXY = xValues.reduce((acc, val, idx) => acc + val * yValues[idx], 0);
+      const sumX2 = xValues.reduce((acc, val) => acc + val * val, 0);
+
+      const denominator = (n * sumX2 - sumX * sumX);
+      const m = (n * sumXY - sumX * sumY) / denominator; // Slope
+      const b = (sumY * sumX2 - sumX * sumXY) / denominator; // Intercept
+
+      const equation = `y = ${m.toFixed(2)}x + ${b.toFixed(2)}`;
+
+      // Display the result
+      document.getElementById('result').textContent = `Best Fit Line: ${equation}`;
+
+      // Plot the data points and the line
+      plotData(xValues, yValues, m, b);
+    }
+
+    function plotData(xValues, yValues, m, b) {
+      const canvas = document.getElementById('plotCanvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw points
+      ctx.fillStyle = 'blue';
+      xValues.forEach((x, idx) => {
+        const y = yValues[idx];
+        ctx.beginPath();
+        ctx.arc(x * 50, canvas.height - y * 50, 5, 0, 2 * Math.PI);
+        ctx.fill();
+      });
+
+      // Draw regression line
+      ctx.strokeStyle = 'red';
+      ctx.beginPath();
+      const startX = 0;
+      const startY = m * startX + b;
+      const endX = canvas.width / 50;
+      const endY = m * endX + b;
+
+      ctx.moveTo(startX * 50, canvas.height - startY * 50);
+      ctx.lineTo(endX * 50, canvas.height - endY * 50);
+      ctx.stroke();
+    }
+  </script>
+</body>
+</html>

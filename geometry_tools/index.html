@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geometry Tools</title>
+  <style>
+    /* General Reset */
+    body, h1, h2, p, ul, li {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f7f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex-direction: column;
+      padding: 20px;
+      margin: 0;
+      min-height: 100vh;
+      height: auto;
+      text-align: center;
+    }
+
+    /* Header */
+    header {
+      background-color: #004e92;
+      color: #ffffff;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    /* Main Content Styling */
+    main {
+      max-width: 1100px;
+      width: 95%;
+      margin-top: 40px;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    section {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.3s ease-in-out, transform 0.2s ease;
+    }
+
+    section:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      transform: translateY(-8px);
+    }
+
+    h2 {
+      color: #004e92;
+      font-size: 2rem;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    input, select, button {
+      font-size: 1rem;
+      padding: 12px;
+      margin-bottom: 20px;
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+
+    button {
+      background-color: #004e92;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+
+    button:hover {
+      background-color: #003377;
+    }
+
+    .output {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f0f8ff;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      color: #004e92;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #ffffff;
+      color: #004e92;
+      width: 100%;
+      border-radius: 10px;
+      margin-top: 40px;
+      box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.1);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        padding: 1rem 1.5rem;
+      }
+
+      header h1 {
+        font-size: 2rem;
+      }
+
+      main {
+        grid-template-columns: 1fr;
+        margin-top: 20px;
+      }
+
+      section {
+        padding: 20px;
+      }
+
+      h2 {
+        font-size: 1.8rem;
+      }
+
+      input, select, button {
+        padding: 10px;
+      }
+
+      footer {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Geometry Tools</h1>
+  </header>
+
+  <main>
+    <!-- Circle Area & Circumference -->
+    <section>
+      <h2>Circle Tools</h2>
+      <input type="number" id="circleRadius" placeholder="Enter radius (r)">
+      <button onclick="calculateCircle()">Calculate Area & Circumference</button>
+      <div class="output" id="circleOutput"></div>
+    </section>
+
+    <!-- Rectangle Area & Perimeter -->
+    <section>
+      <h2>Rectangle Tools</h2>
+      <input type="number" id="rectangleLength" placeholder="Enter length (l)">
+      <input type="number" id="rectangleWidth" placeholder="Enter width (w)">
+      <button onclick="calculateRectangle()">Calculate Area & Perimeter</button>
+      <div class="output" id="rectangleOutput"></div>
+    </section>
+
+    <!-- Triangle Area -->
+    <section>
+      <h2>Triangle Tools</h2>
+      <input type="number" id="triangleBase" placeholder="Enter base (b)">
+      <input type="number" id="triangleHeight" placeholder="Enter height (h)">
+      <button onclick="calculateTriangle()">Calculate Area</button>
+      <div class="output" id="triangleOutput"></div>
+    </section>
+
+    <!-- Square Area & Perimeter -->
+    <section>
+      <h2>Square Tools</h2>
+      <input type="number" id="squareSide" placeholder="Enter side length (s)">
+      <button onclick="calculateSquare()">Calculate Area & Perimeter</button>
+      <div class="output" id="squareOutput"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Geometry Tools</p>
+  </footer>
+
+  <script>
+    // Circle Area & Circumference Calculation
+    function calculateCircle() {
+      const radius = parseFloat(document.getElementById("circleRadius").value);
+      const output = document.getElementById("circleOutput");
+      if (radius && radius > 0) {
+        const area = Math.PI * radius * radius;
+        const circumference = 2 * Math.PI * radius;
+        output.innerHTML = `Area: ${area.toFixed(2)}<br>Circumference: ${circumference.toFixed(2)}`;
+      } else {
+        output.innerHTML = "Please enter a valid radius.";
+      }
+    }
+
+    // Rectangle Area & Perimeter Calculation
+    function calculateRectangle() {
+      const length = parseFloat(document.getElementById("rectangleLength").value);
+      const width = parseFloat(document.getElementById("rectangleWidth").value);
+      const output = document.getElementById("rectangleOutput");
+      if (length && width && length > 0 && width > 0) {
+        const area = length * width;
+        const perimeter = 2 * (length + width);
+        output.innerHTML = `Area: ${area.toFixed(2)}<br>Perimeter: ${perimeter.toFixed(2)}`;
+      } else {
+        output.innerHTML = "Please enter valid length and width.";
+      }
+    }
+
+    // Triangle Area Calculation
+    function calculateTriangle() {
+      const base = parseFloat(document.getElementById("triangleBase").value);
+      const height = parseFloat(document.getElementById("triangleHeight").value);
+      const output = document.getElementById("triangleOutput");
+      if (base && height && base > 0 && height > 0) {
+        const area = 0.5 * base * height;
+        output.innerHTML = `Area: ${area.toFixed(2)}`;
+      } else {
+        output.innerHTML = "Please enter valid base and height.";
+      }
+    }
+
+    // Square Area & Perimeter Calculation
+    function calculateSquare() {
+      const side = parseFloat(document.getElementById("squareSide").value);
+      const output = document.getElementById("squareOutput");
+      if (side && side > 0) {
+        const area = side * side;
+        const perimeter = 4 * side;
+        output.innerHTML = `Area: ${area.toFixed(2)}<br>Perimeter: ${perimeter.toFixed(2)}`;
+      } else {
+        output.innerHTML = "Please enter a valid side length.";
+      }
+    }
+  </script>
+
+</body>
+</html>

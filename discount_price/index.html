@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Discount Price Calculator</title>
+  <style>
+    /* General Reset */
+    body, h1, h2, p, ul, li {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f7f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+      margin: 0; /* Ensure no extra margin is added */
+      min-height: 100vh; /* Ensure it takes full height */
+      height: auto; /* Prevent excessive scrolling */
+    }
+
+    /* Header */
+    header {
+      background-color: #004e92;
+      color: #ffffff;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    /* Main Content Styling */
+    main {
+      max-width: 1100px;
+      width: 95%;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    section {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.3s ease-in-out, transform 0.2s ease;
+      text-align: center;
+    }
+
+    section:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      transform: translateY(-8px);
+    }
+
+    h2 {
+      color: #004e92;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    input, select, button {
+      font-size: 1rem;
+      padding: 12px;
+      margin-bottom: 20px;
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+
+    button {
+      background-color: #004e92;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+
+    button:hover {
+      background-color: #003377;
+    }
+
+    .output {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f0f8ff;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      color: #004e92;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #ffffff;
+      color: #004e92;
+      width: 100%;
+      border-radius: 10px;
+      margin-top: 40px;
+      box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.1);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        padding: 1rem 1.5rem;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      main {
+        grid-template-columns: 1fr;
+        margin-top: 20px;
+      }
+
+      section {
+        padding: 15px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      input, select, button {
+        padding: 10px;
+      }
+
+      footer {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Discount Price Calculator</h1>
+  </header>
+
+  <main>
+    <!-- Discount Price Calculator -->
+    <section>
+      <h2>Calculate Your Discount Price</h2>
+      
+      <input type="number" id="originalPrice" placeholder="Enter original price" required>
+      
+      <input type="number" id="discountValue" placeholder="Enter discount value" required>
+      
+      <select id="discountType">
+        <option value="percentage">Percentage Discount</option>
+        <option value="flat">Flat Amount Discount</option>
+      </select>
+      
+      <button onclick="calculateDiscount()">Calculate Discounted Price</button>
+      <div class="output" id="discountOutput"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Discount Price Calculator</p>
+  </footer>
+
+  <script>
+    function calculateDiscount() {
+      const originalPrice = parseFloat(document.getElementById("originalPrice").value);
+      const discountValue = parseFloat(document.getElementById("discountValue").value);
+      const discountType = document.getElementById("discountType").value;
+      const output = document.getElementById("discountOutput");
+
+      if (originalPrice && discountValue) {
+        let discountedPrice;
+
+        if (discountType === "percentage") {
+          // Calculate the price after percentage discount
+          discountedPrice = originalPrice - (originalPrice * (discountValue / 100));
+        } else if (discountType === "flat") {
+          // Calculate the price after flat discount
+          discountedPrice = originalPrice - discountValue;
+        }
+
+        output.innerHTML = `
+          <p>Original Price: $${originalPrice.toFixed(2)}</p>
+          <p>Discount Applied: $${discountValue.toFixed(2)} ${discountType === 'percentage' ? '(' + discountValue + '%)' : ''}</p>
+          <p><strong>Discounted Price: $${discountedPrice.toFixed(2)}</strong></p>
+        `;
+      } else {
+        output.innerHTML = "Please enter valid values.";
+      }
+    }
+  </script>
+
+</body>
+</html>

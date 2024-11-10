@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Equation Solver</title>
+  <style>
+    /* General Reset */
+    body, h1, h2, p, input, button {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f7f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    /* Header */
+    header {
+      background-color: #004e92;
+      color: #ffffff;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+      max-width: 800px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    /* Main Section */
+    main {
+      background-color: #ffffff;
+      padding: 20px;
+      width: 100%;
+      max-width: 800px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #004e92;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+    }
+
+    .equation-input {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+    }
+
+    label {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #004e92;
+    }
+
+    input, select {
+      width: 100%;
+      max-width: 350px;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-top: 5px;
+    }
+
+    button {
+      padding: 12px 18px;
+      background-color: #004e92;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #00376b;
+      transform: translateY(-3px);
+    }
+
+    p#result {
+      margin-top: 10px;
+      font-size: 1.2rem;
+      color: #004e92;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        padding: 1.5rem 1rem;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      main {
+        padding: 15px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      input, select {
+        width: 100%;
+        max-width: 250px;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Equation Solver</h1>
+  </header>
+
+  <main>
+    <h2>Solve Algebraic Equations</h2>
+    <div class="equation-input">
+      <label for="equation">Enter Equation (e.g. ax + b = 0 or ax^2 + bx + c = 0):</label>
+      <input type="text" id="equation" placeholder="ax + b = 0">
+
+      <label for="type">Select Equation Type:</label>
+      <select id="type">
+        <option value="linear">Linear Equation (ax + b = 0)</option>
+        <option value="quadratic">Quadratic Equation (ax^2 + bx + c = 0)</option>
+      </select>
+
+      <button onclick="solveEquation()">Solve Equation</button>
+
+      <p id="result"></p>
+    </div>
+  </main>
+
+  <script>
+    function solveEquation() {
+      const equation = document.getElementById('equation').value;
+      const equationType = document.getElementById('type').value;
+      const resultField = document.getElementById('result');
+      
+      if (!equation) {
+        resultField.textContent = "Please enter a valid equation.";
+        return;
+      }
+
+      let result = '';
+
+      if (equationType === 'linear') {
+        // For linear equation ax + b = 0 -> x = -b/a
+        const match = equation.match(/^([+-]?\d*\.?\d*)x\s*([+-]?\d*\.?\d*)\s*=\s*0$/);
+        if (match) {
+          const a = parseFloat(match[1]) || 1;
+          const b = parseFloat(match[2]) || 0;
+          const x = -b / a;
+          result = `Solution: x = ${x}`;
+        } else {
+          result = "Invalid format. Use ax + b = 0 format.";
+        }
+      } else if (equationType === 'quadratic') {
+        // For quadratic equation ax^2 + bx + c = 0 -> Solve using quadratic formula
+        const match = equation.match(/^([+-]?\d*\.?\d*)x\^2\s*([+-]?\d*\.?\d*)x\s*([+-]?\d*\.?\d*)\s*=\s*0$/);
+        if (match) {
+          const a = parseFloat(match[1]) || 1;
+          const b = parseFloat(match[2]) || 0;
+          const c = parseFloat(match[3]) || 0;
+          const discriminant = b * b - 4 * a * c;
+          
+          if (discriminant > 0) {
+            const x1 = (-b + Math.sqrt(discriminant)) / (2 * a);
+            const x2 = (-b - Math.sqrt(discriminant)) / (2 * a);
+            result = `Solutions: x1 = ${x1}, x2 = ${x2}`;
+          } else if (discriminant === 0) {
+            const x = -b / (2 * a);
+            result = `One Solution: x = ${x}`;
+          } else {
+            result = "No real solutions.";
+          }
+        } else {
+          result = "Invalid format. Use ax^2 + bx + c = 0 format.";
+        }
+      }
+      
+      resultField.textContent = result;
+    }
+  </script>
+</body>
+</html>

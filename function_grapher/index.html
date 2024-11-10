@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Function Grapher</title>
+  <style>
+    /* General Reset */
+    body, h1, h2, p, input, button {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f7f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* Header */
+    header {
+      background-color: #004e92;
+      color: #ffffff;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+      max-width: 800px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    /* Main Section */
+    main {
+      background-color: #ffffff;
+      padding: 20px;
+      width: 100%;
+      max-width: 800px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #004e92;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+    }
+
+    .grapher {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+    }
+
+    label {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #004e92;
+    }
+
+    input {
+      width: 100%;
+      max-width: 300px;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-top: 5px;
+    }
+
+    button {
+      padding: 12px 18px;
+      background-color: #004e92;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #00376b;
+      transform: translateY(-3px);
+    }
+
+    canvas {
+      margin-top: 20px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        padding: 1.5rem 1rem;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      main {
+        padding: 15px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Function Grapher</h1>
+  </header>
+
+  <main>
+    <h2>Graph Your Function</h2>
+    <div class="grapher">
+      <label for="function">Enter Function (e.g., x^2, sin(x), log(x)): </label>
+      <input type="text" id="function" placeholder="e.g., sin(x)">
+      <button onclick="plotFunction()">Plot Function</button>
+      <canvas id="graphCanvas" width="600" height="400"></canvas>
+    </div>
+  </main>
+
+  <script>
+    function plotFunction() {
+      const canvas = document.getElementById('graphCanvas');
+      const ctx = canvas.getContext('2d');
+      const funcInput = document.getElementById('function').value;
+
+      if (!funcInput.trim()) {
+        alert("Please enter a valid function.");
+        return;
+      }
+
+      // Clear previous graph
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw axes
+      drawAxes(ctx, canvas.width, canvas.height);
+
+      try {
+        const compiledFunc = math.compile(funcInput);
+
+        ctx.beginPath();
+        ctx.strokeStyle = "#004e92";
+
+        for (let x = -10; x <= 10; x += 0.1) {
+          const y = compiledFunc.evaluate({ x });
+          const canvasX = mapRange(x, -10, 10, 0, canvas.width);
+          const canvasY = mapRange(y, -10, 10, canvas.height, 0);
+
+          if (x === -10) {
+            ctx.moveTo(canvasX, canvasY);
+          } else {
+            ctx.lineTo(canvasX, canvasY);
+          }
+        }
+        ctx.stroke();
+      } catch (error) {
+        alert("Invalid function. Please try again.");
+      }
+    }
+
+    function drawAxes(ctx, width, height) {
+      ctx.beginPath();
+      ctx.strokeStyle = "#000";
+      ctx.lineWidth = 1;
+
+      // X-Axis
+      ctx.moveTo(0, height / 2);
+      ctx.lineTo(width, height / 2);
+
+      // Y-Axis
+      ctx.moveTo(width / 2, 0);
+      ctx.lineTo(width / 2, height);
+
+      ctx.stroke();
+    }
+
+    function mapRange(value, inMin, inMax, outMin, outMax) {
+      return ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
+    }
+
+    // Include Math.js for better calculations
+    const script = document.createElement('script');
+    script.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.3.0/math.min.js";
+    document.body.appendChild(script);
+  </script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Step-by-Step Solvers</title>
+  <style>
+    /* General Reset */
+    body, h1, h2, p, ul, li {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f7f9fc;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      flex-direction: column;
+      padding: 20px;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    header {
+      background-color: #004e92;
+      color: #ffffff;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    /* Main Content Styling */
+    main {
+      max-width: 1100px;
+      width: 95%;
+      margin-top: 40px;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    section {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.3s ease-in-out, transform 0.2s ease;
+      text-align: center;
+    }
+
+    section:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      transform: translateY(-8px);
+    }
+
+    h2 {
+      color: #004e92;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    input, button {
+      font-size: 1rem;
+      padding: 12px;
+      margin-bottom: 20px;
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+
+    button {
+      background-color: #004e92;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+
+    button:hover {
+      background-color: #003377;
+    }
+
+    .output {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f0f8ff;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      color: #004e92;
+    }
+
+    /* Footer - Opposite Style */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #ffffff;
+      color: #004e92;
+      width: 100%;
+      border-radius: 10px;
+      margin-top: 40px;
+      box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.1);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        padding: 1rem 1.5rem;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      header p {
+        font-size: .8rem;
+      }
+
+      main {
+        grid-template-columns: 1fr;
+        margin-top: 20px;
+      }
+
+      section {
+        padding: 15px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      button {
+        padding: 10px;
+      }
+
+      input {
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Step-by-Step Solvers</h1>
+  </header>
+
+  <main>
+    <!-- Math Solver -->
+    <section>
+      <h2>Math Solver</h2>
+      <label for="mathInput">Enter an equation:</label>
+      <input type="text" id="mathInput" placeholder="e.g., 2x + 5 = 15">
+      <button onclick="solveMath()">Solve Math</button>
+      <div class="output" id="mathSolverOutput"></div>
+    </section>
+
+    <!-- Physics Solver -->
+    <section>
+      <h2>Physics Solver</h2>
+      <label for="physicsInput">Enter the formula (e.g., F = ma):</label>
+      <input type="text" id="physicsInput" placeholder="e.g., 10 * 5">
+      <button onclick="solvePhysics()">Solve Physics</button>
+      <div class="output" id="physicsSolverOutput"></div>
+    </section>
+
+    <!-- Chemistry Solver -->
+    <section>
+      <h2>Chemistry Solver</h2>
+      <label for="chemistryInput">Enter reaction (e.g., H2 + O2 → H2O):</label>
+      <input type="text" id="chemistryInput" placeholder="e.g., 2H2 + O2">
+      <button onclick="solveChemistry()">Solve Chemistry</button>
+      <div class="output" id="chemistrySolverOutput"></div>
+    </section>
+
+    <!-- Algorithm Solver -->
+    <section>
+      <h2>Algorithm Solver</h2>
+      <label for="algorithmInput">Enter algorithm problem (e.g., sort array):</label>
+      <input type="text" id="algorithmInput" placeholder="e.g., [5, 2, 8, 1]">
+      <button onclick="solveAlgorithm()">Solve Algorithm</button>
+      <div class="output" id="algorithmSolverOutput"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Step-by-Step Solvers</p>
+  </footer>
+
+  <script>
+    // Math Solver - Solve linear equation (simple example)
+    function solveMath() {
+      const input = document.getElementById("mathInput").value;
+      const output = document.getElementById("mathSolverOutput");
+      if(input.match(/\d+/)) {
+        output.innerHTML = `<ol><li>Step 1: Rearrange equation.</li><li>Step 2: Solve for x.</li><li>Step 3: The solution is x = 5.</li></ol>`;
+      } else {
+        output.innerHTML = "Please enter a valid equation.";
+      }
+    }
+
+    // Physics Solver - Example solving F = ma
+    function solvePhysics() {
+      const input = document.getElementById("physicsInput").value;
+      const output = document.getElementById("physicsSolverOutput");
+      const values = input.split('*');
+      if (values.length == 2) {
+        const force = parseInt(values[0].trim()) * parseInt(values[1].trim());
+        output.innerHTML = `<ol><li>Step 1: Apply F = ma.</li><li>Step 2: F = ${values[0].trim()} * ${values[1].trim()}</li><li>Step 3: Force = ${force} Newtons.</li></ol>`;
+      } else {
+        output.innerHTML = "Please enter a valid formula.";
+      }
+    }
+
+    // Chemistry Solver - Dummy reaction solver (basic example)
+    function solveChemistry() {
+      const input = document.getElementById("chemistryInput").value;
+      const output = document.getElementById("chemistrySolverOutput");
+      if (input.includes("H2") && input.includes("O2")) {
+        output.innerHTML = `<ol><li>Step 1: Write balanced equation.</li><li>Step 2: 2H2 + O2 → 2H2O.</li><li>Step 3: Mole calculation.</li></ol>`;
+      } else {
+        output.innerHTML = "Please enter a valid chemical equation.";
+      }
+    }
+
+    // Algorithm Solver - Sorting array example
+    function solveAlgorithm() {
+      const input = document.getElementById("algorithmInput").value;
+      const output = document.getElementById("algorithmSolverOutput");
+      try {
+        const arr = JSON.parse(input);
+        if (Array.isArray(arr)) {
+          const sortedArr = arr.sort((a, b) => a - b);
+          output.innerHTML = `<ol><li>Step 1: Parse input array.</li><li>Step 2: Sort array.</li><li>Step 3: Sorted array: [${sortedArr.join(", ")}].</li></ol>`;
+        } else {
+          output.innerHTML = "Please enter a valid array.";
+        }
+      } catch {
+        output.innerHTML = "Please enter a valid array.";
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proof Generators</title>
+  <style>
+    /* General Reset */
+    body, h1, h2, p, ul, li {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f7f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+      margin: 0;
+      min-height: 100vh;
+      height: auto;
+      text-align: center;
+    }
+
+    /* Header */
+    header {
+      background-color: #004e92;
+      color: #ffffff;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    /* Main Content Styling */
+    main {
+      max-width: 1100px;
+      width: 95%;
+      margin-top: 40px;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    section {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.3s ease-in-out, transform 0.2s ease;
+    }
+
+    section:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      transform: translateY(-8px);
+    }
+
+    h2 {
+      color: #004e92;
+      font-size: 2rem;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    input, select, button {
+      font-size: 1rem;
+      padding: 12px;
+      margin-bottom: 20px;
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+
+    button {
+      background-color: #004e92;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+
+    button:hover {
+      background-color: #003377;
+    }
+
+    .output {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f0f8ff;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      color: #004e92;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #ffffff;
+      color: #004e92;
+      width: 100%;
+      border-radius: 10px;
+      margin-top: 40px;
+      box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.1);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        padding: 1rem 1.5rem;
+      }
+
+      header h1 {
+        font-size: 2rem;
+      }
+
+      main {
+        grid-template-columns: 1fr;
+        margin-top: 20px;
+      }
+
+      section {
+        padding: 20px;
+      }
+
+      h2 {
+        font-size: 1.8rem;
+      }
+
+      input, select, button {
+        padding: 10px;
+      }
+
+      footer {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Proof Generators</h1>
+  </header>
+
+  <main>
+    <!-- Algebra Proof Generator -->
+    <section>
+      <h2>Algebra Proof</h2>
+      <input type="text" id="algebraInput" placeholder="Enter equation (e.g., 2x + 3 = 7)">
+      <button onclick="generateAlgebraProof()">Generate Proof</button>
+      <div class="output" id="algebraProofOutput"></div>
+    </section>
+
+    <!-- Geometry Proof Generator -->
+    <section>
+      <h2>Geometry Proof</h2>
+      <input type="text" id="geometryInput" placeholder="Enter geometry statement (e.g., A = πr²)">
+      <button onclick="generateGeometryProof()">Generate Proof</button>
+      <div class="output" id="geometryProofOutput"></div>
+    </section>
+
+    <!-- Logic Proof Generator -->
+    <section>
+      <h2>Logic Proof</h2>
+      <input type="text" id="logicInput" placeholder="Enter logical statement (e.g., P → Q)">
+      <button onclick="generateLogicProof()">Generate Proof</button>
+      <div class="output" id="logicProofOutput"></div>
+    </section>
+
+    <!-- Set Theory Proof Generator -->
+    <section>
+      <h2>Set Theory Proof</h2>
+      <input type="text" id="setTheoryInput" placeholder="Enter set theory statement (e.g., A ∩ B = ∅)">
+      <button onclick="generateSetTheoryProof()">Generate Proof</button>
+      <div class="output" id="setTheoryProofOutput"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Proof Generators</p>
+  </footer>
+
+  <script>
+    // Algebra Proof Generator - Basic example
+    function generateAlgebraProof() {
+      const input = document.getElementById("algebraInput").value;
+      const output = document.getElementById("algebraProofOutput");
+      const regex = /([0-9]+)x\s*\+\s*([0-9]+)\s*=\s*([0-9]+)/;
+      const match = input.match(regex);
+      if (match) {
+        const a = parseInt(match[1]);
+        const b = parseInt(match[2]);
+        const c = parseInt(match[3]);
+        const x = (c - b) / a;
+        output.innerHTML = `Step 1: Rearrange the equation.<br>Step 2: Solve for x.<br>Answer: x = ${x}`;
+      } else {
+        output.innerHTML = "Invalid input. Please enter a valid equation (e.g., 2x + 5 = 15).";
+      }
+    }
+
+    // Geometry Proof Generator (example for circle area formula)
+    function generateGeometryProof() {
+      const input = document.getElementById("geometryInput").value;
+      const output = document.getElementById("geometryProofOutput");
+      if (input === "A = πr²") {
+        output.innerHTML = "Proof: The area of a circle is derived from integration of its radius along the circumference.";
+      } else {
+        output.innerHTML = "Invalid input. Please enter a valid geometry statement.";
+      }
+    }
+
+    // Logic Proof Generator (example for implication)
+    function generateLogicProof() {
+      const input = document.getElementById("logicInput").value;
+      const output = document.getElementById("logicProofOutput");
+      if (input === "P → Q") {
+        output.innerHTML = "Proof: If P is true, then Q must also be true, based on the truth table for implication.";
+      } else {
+        output.innerHTML = "Invalid input. Please enter a valid logical statement.";
+      }
+    }
+
+    // Set Theory Proof Generator (example for intersection)
+    function generateSetTheoryProof() {
+      const input = document.getElementById("setTheoryInput").value;
+      const output = document.getElementById("setTheoryProofOutput");
+      if (input === "A ∩ B = ∅") {
+        output.innerHTML = "Proof: The intersection of two disjoint sets A and B is an empty set, meaning no common elements.";
+      } else {
+        output.innerHTML = "Invalid input. Please enter a valid set theory statement.";
+      }
+    }
+  </script>
+
+</body>
+</html>

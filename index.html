@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CalculatePro.site</title>
+  <style>
+    /* General Reset */
+    body, h1, h2, p, ul, li {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f7f9fc;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      flex-direction: column;
+      padding: 20px;
+      margin: 0; /* Ensure no extra margin is added */
+      min-height: 100vh; /* Ensure it takes full height */
+      height: auto; /* Prevent excessive scrolling */
+    }
+
+    /* Header */
+    header {
+      background-color: #004e92;
+      color: #ffffff;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    header p {
+      font-size: 1.2rem;
+    }
+
+    /* Main Content Styling */
+    main {
+      max-width: 1100px;
+      width: 95%;
+      margin-top: 40px;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    section {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.3s ease-in-out, transform 0.2s ease;
+      text-align: center;
+    }
+
+    section:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      transform: translateY(-8px);
+    }
+
+    h2 {
+      color: #004e92;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      margin: 10px 0;
+    }
+
+    a {
+      text-decoration: none;
+      color: #004e92;
+      font-weight: 500;
+      padding: 12px 18px;
+      background-color: #e5f1ff;
+      border-radius: 8px;
+      transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    }
+
+    a:hover {
+      background-color: #004e92;
+      color: #ffffff;
+      box-shadow: 0px 4px 12px rgba(0, 78, 146, 0.3);
+      transform: scale(1.05);
+    }
+
+    /* Footer - Opposite Style */
+    footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #ffffff; 
+  color: #004e92;
+  width: 100%;
+  border-radius: 10px;
+  margin-top: 40px;
+  box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.1); 
+  font-size: 0.9rem;
+  line-height: 1.6; /* Adds spacing between lines for better readability */
+}
+
+footer a {
+  color: #004e92; 
+  text-decoration: none;
+  font-weight: 500;
+}
+
+footer a:hover {
+  text-decoration: underline; 
+}
+
+footer a:not(:last-child)::after {
+  content: "|"; 
+  margin: 0 8px; 
+  color: #004e92; 
+}
+
+
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        padding: 1rem 1.5rem;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      header p {
+        font-size: .8rem;
+      }
+
+      main {
+        grid-template-columns: 1fr;
+        margin-top: 20px;
+      }
+
+      section {
+        padding: 15px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      a {
+        padding: 10px 14px;
+      }
+
+      /* Ensure header text is centered */
+      header {
+        text-align: center;
+        padding: 1rem;
+      }
+    }
+</style>
+
+</head>
+<body>
+  <header>
+    <h1>Welcome to CalculatePro</h1>
+    <p>Your one-stop platform for advanced calculations and simulations</p>
+  </header>
+
+  <main>
+    <!-- Advanced Calculators Section -->
+    <section>
+      <h2>Advanced Calculators</h2> <br>
+      <ul>
+        <li><a href="/matrix_calculator/index.html">Matrix Calculator</a></li> <br>
+        <li><a href="/probability_calculator/index.html">Probability Calculator</a></li> <br>
+        <li><a href="/statistics_calculator/index.html">Statistics Calculator</a></li>
+      </ul>
+    </section>
+
+    <!-- Graphing and Plotting Tools Section -->
+    <section>
+      <h2>Graphing and Plotting</h2> <br>
+      <ul>
+        <li><a href="/function_grapher/index.html">Function Grapher</a></li> <br>
+        <li><a href="/parametric_plotter/index.html">Parametric and Polar Plotter</a></li> <br>
+        <li><a href="/vector_field/index.html">Vector Field Plotter</a></li> <br>
+        <li><a href="/complex_grapher/index.html">Complex Number Grapher</a></li>
+      </ul>
+    </section>
+
+    <!-- Conversion Tools Section -->
+    <section>
+      <h2>Conversion Tools</h2> <br>
+      <ul>
+        <li><a href="/unit_converter/index.html">Scientific Unit Converter</a></li> <br>   
+        <li><a href="/cgpa_percentage/index.html">CGPA<=>Percentage</a></li> <br>
+        <li><a href="/currency_converter/index.html">Currency Converter</a></li> <br>
+        <li><a href="/timezone_converter/index.html">Time and Date Converter</a></li>
+      </ul>
+    </section>
+
+    <!-- Formula and Equation Solvers Section -->
+    <section>
+      <h2>Equation Solvers</h2> <br>
+      <ul>
+        <li><a href="/equation_solver/index.html">Equation Solver</a></li> <br>
+        <li><a href="/diff_equation/index.html">Differential Equation Solver</a></li> <br>
+        <li><a href="/system_equation/index.html">Systems of Equations Solver</a></li>
+      </ul>
+    </section>
+
+    <!-- Data Analysis and Visualization Section -->
+    <section>
+      <h2>Data Analysis and Visualization</h2> <br>
+      <ul>
+        <li><a href="/regression_analysis/index.html">Regression Analysis Tool</a></li> <br>
+        <li><a href="/fourier_transform/index.html">Fourier Transform Visualizer</a></li> <br>
+        <li><a href="/histogram_boxplot/index.html">Histogram and Boxplot Generator</a></li>
+      </ul>
+    </section>
+
+    <!-- Simulators and Interactive Models Section -->
+    <section>
+      <h2>Simulators and Interactive Models</h2> <br>
+      <ul>
+        <li><a href="/physics_simulator/index.html">Physics Simulators</a></li> <br>
+        <li><a href="/chemical_balancer/index.html">Chemical Equation Balancer</a></li> <br>
+        <li><a href="/genetics_probability/index.html">Genetics Probability Calculator</a></li> <br>
+        <li><a href="/astronomy_tools/index.html">Astronomy Tools</a></li>
+      </ul>
+    </section>
+
+    <!-- Educational Tools Section -->
+    <section>
+      <h2>Educational Tools</h2> <br>
+      <ul>
+        <li><a href="/step_solver/index.html">Step-by-Step Solvers</a></li> <br>
+        <li><a href="/proof_generators/index.html">Proof Generators</a></li> <br>
+        <li><a href="/geometry_tools/index.html">Geometry Tools</a></li>
+      </ul>
+    </section>
+
+<!--Financial Tools and Calculators-->
+    <section>
+        <h2>Financial Calculators</h2> <br>
+        <ul>
+          <li><a href="/interest_calculator/index.html">Interest Rate Calculator</a></li> <br>
+          <li><a href="/loan_repayment/index.html">Loan Repayment Calculator</a></li> <br>
+          <li><a href="/discount_price/index.html">Discount Price Calculator</a></li>
+        </ul>
+      </section>
+
+      <!-- Mathematical Tools Section -->
+    <section>
+        <h2>For Specific Fields</h2> <br>
+        <ul>
+          <li><a href="/cryptography/index.html">Cryptography Tools</a></li> <br>
+          <li><a href="/game_theory/index.html">Game Theory Calculator</a></li> <br>
+          <li><a href="/combinatorics/index.html">Combinatorics Tool</a></li>
+        </ul>
+      </section>
+      
+  </main>
+
+ <!-- Footer -->
+ <footer>
+  &copy; 2024 | 
+  <a href="/privacy policy/index.html">Privacy Policy</a> | 
+  <a href="/terms & conditions/index.html">Terms & Conditions</a> | 
+  All Rights Reserved
+</footer>
+
+</body>
+</html>

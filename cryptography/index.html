@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cryptography Tools</title>
+  <style>
+    /* General Reset */
+    body, h1, h2, p, ul, li {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f7f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    header {
+      background-color: #004e92;
+      color: #ffffff;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    /* Main Content Styling */
+    main {
+      max-width: 1100px;
+      width: 95%;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    section {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.3s ease-in-out, transform 0.2s ease;
+      text-align: center;
+    }
+
+    section:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      transform: translateY(-8px);
+    }
+
+    h2 {
+      color: #004e92;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    input, button, select, textarea {
+      font-size: 1rem;
+      padding: 12px;
+      margin-bottom: 20px;
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+
+    button {
+      background-color: #004e92;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+
+    button:hover {
+      background-color: #003377;
+    }
+
+    .output {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f0f8ff;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      color: #004e92;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #ffffff;
+      color: #004e92;
+      width: 100%;
+      border-radius: 10px;
+      margin-top: 40px;
+      box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.1);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        padding: 1rem 1.5rem;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      main {
+        grid-template-columns: 1fr;
+        margin-top: 20px;
+      }
+
+      section {
+        padding: 15px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      input, button {
+        padding: 10px;
+      }
+
+      footer {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Cryptography Tools</h1>
+  </header>
+
+  <main>
+    <!-- Caesar Cipher Encryption/Decryption -->
+    <section>
+      <h2>Caesar Cipher</h2>
+      <input type="text" id="caesarInput" placeholder="Enter text" />
+      <input type="number" id="caesarShift" placeholder="Shift value (1-25)" min="1" max="25" />
+      <button onclick="caesarCipher()">Encrypt/Decrypt</button>
+      <div class="output" id="caesarOutput"></div>
+    </section>
+
+    <!-- SHA-256 Hashing -->
+    <section>
+      <h2>SHA-256 Hashing</h2>
+      <input type="text" id="hashInput" placeholder="Enter text" />
+      <button onclick="hashText()">Generate Hash</button>
+      <div class="output" id="hashOutput"></div>
+    </section>
+
+    <!-- Base64 Encoding/Decoding -->
+    <section>
+      <h2>Base64 Encoder/Decoder</h2>
+      <textarea id="base64Input" placeholder="Enter text to encode/decode" rows="4"></textarea>
+      <select id="base64Mode">
+        <option value="encode">Encode to Base64</option>
+        <option value="decode">Decode from Base64</option>
+      </select>
+      <button onclick="base64Process()">Process</button>
+      <div class="output" id="base64Output"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Cryptography Tools</p>
+  </footer>
+
+  <script>
+    // Caesar Cipher Encryption/Decryption
+    function caesarCipher() {
+      const text = document.getElementById("caesarInput").value;
+      const shift = parseInt(document.getElementById("caesarShift").value);
+      let result = '';
+      
+      if (isNaN(shift) || shift < 1 || shift > 25) {
+        document.getElementById("caesarOutput").innerText = "Shift value must be between 1 and 25.";
+        return;
+      }
+
+      for (let i = 0; i < text.length; i++) {
+        let char = text[i];
+        if (char.match(/[a-zA-Z]/)) {
+          const code = text.charCodeAt(i);
+          const base = (char === char.toUpperCase()) ? 65 : 97;
+          result += String.fromCharCode(((code - base + shift) % 26) + base);
+        } else {
+          result += char;
+        }
+      }
+      document.getElementById("caesarOutput").innerText = result;
+    }
+
+    // SHA-256 Hashing
+    function hashText() {
+      const text = document.getElementById("hashInput").value;
+      if (text) {
+        const hash = crypto.subtle.digest('SHA-256', new TextEncoder().encode(text))
+          .then(buffer => {
+            const hashArray = Array.from(new Uint8Array(buffer));
+            const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+            document.getElementById("hashOutput").innerText = hashHex;
+          });
+      } else {
+        document.getElementById("hashOutput").innerText = "Please enter text to hash.";
+      }
+    }
+
+    // Base64 Encoding/Decoding
+    function base64Process() {
+      const input = document.getElementById("base64Input").value;
+      const mode = document.getElementById("base64Mode").value;
+      let output = '';
+
+      if (mode === 'encode') {
+        output = btoa(input);
+      } else if (mode === 'decode') {
+        try {
+          output = atob(input);
+        } catch (e) {
+          output = "Invalid Base64 input.";
+        }
+      }
+      
+      document.getElementById("base64Output").innerText = output;
+    }
+  </script>
+
+</body>
+</html>

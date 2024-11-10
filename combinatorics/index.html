@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Combinatorics Tool</title>
+  <style>
+    /* General Reset */
+    body, h1, h2, p, ul, li {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f7f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    header {
+      background-color: #004e92;
+      color: #ffffff;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    /* Main Content Styling */
+    main {
+      max-width: 1100px;
+      width: 95%;
+      margin-top: 40px;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    section {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.3s ease-in-out, transform 0.2s ease;
+      text-align: center;
+    }
+
+    section:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      transform: translateY(-8px);
+    }
+
+    h2 {
+      color: #004e92;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    input, button {
+      font-size: 1rem;
+      padding: 12px;
+      margin-bottom: 20px;
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+
+    button {
+      background-color: #004e92;
+      color: white;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #003377;
+      transform: scale(1.05);
+    }
+
+    .output {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f0f8ff;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      color: #004e92;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #ffffff;
+      color: #004e92;
+      width: 100%;
+      border-radius: 10px;
+      margin-top: 40px;
+      box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.1);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        padding: 1rem;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      main {
+        grid-template-columns: 1fr;
+        margin-top: 20px;
+      }
+
+      section {
+        padding: 15px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      input, button {
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Combinatorics Tool</h1>
+  </header>
+
+  <main>
+    <!-- Permutation Calculator -->
+    <section>
+      <h2>Permutations (nPr)</h2>
+      <label for="nPr_n">Enter n:</label>
+      <input type="number" id="nPr_n" placeholder="n" />
+      
+      <label for="nPr_r">Enter r:</label>
+      <input type="number" id="nPr_r" placeholder="r" />
+      
+      <button onclick="calculatePermutation()">Calculate</button>
+      <div class="output" id="nPr_result"></div>
+    </section>
+
+    <!-- Combination Calculator -->
+    <section>
+      <h2>Combinations (nCr)</h2>
+      <label for="nCr_n">Enter n:</label>
+      <input type="number" id="nCr_n" placeholder="n" />
+      
+      <label for="nCr_r">Enter r:</label>
+      <input type="number" id="nCr_r" placeholder="r" />
+      
+      <button onclick="calculateCombination()">Calculate</button>
+      <div class="output" id="nCr_result"></div>
+    </section>
+
+    <!-- Factorial Calculator -->
+    <section>
+      <h2>Factorial (n!)</h2>
+      <label for="factorial_n">Enter n:</label>
+      <input type="number" id="factorial_n" placeholder="n" />
+      
+      <button onclick="calculateFactorial()">Calculate</button>
+      <div class="output" id="factorial_result"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Combinatorics Tool</p>
+  </footer>
+
+  <script>
+    // Permutation Calculation (nPr)
+    function calculatePermutation() {
+      const n = parseInt(document.getElementById("nPr_n").value);
+      const r = parseInt(document.getElementById("nPr_r").value);
+
+      if (isNaN(n) || isNaN(r) || r > n || n < 0 || r < 0) {
+        document.getElementById("nPr_result").innerText = "Invalid input. Ensure 0 <= r <= n.";
+        return;
+      }
+
+      const result = factorial(n) / factorial(n - r);
+      document.getElementById("nPr_result").innerText = `Result: ${result}`;
+    }
+
+    // Combination Calculation (nCr)
+    function calculateCombination() {
+      const n = parseInt(document.getElementById("nCr_n").value);
+      const r = parseInt(document.getElementById("nCr_r").value);
+
+      if (isNaN(n) || isNaN(r) || r > n || n < 0 || r < 0) {
+        document.getElementById("nCr_result").innerText = "Invalid input. Ensure 0 <= r <= n.";
+        return;
+      }
+
+      const result = factorial(n) / (factorial(r) * factorial(n - r));
+      document.getElementById("nCr_result").innerText = `Result: ${result}`;
+    }
+
+    // Factorial Calculation (n!)
+    function calculateFactorial() {
+      const n = parseInt(document.getElementById("factorial_n").value);
+
+      if (isNaN(n) || n < 0) {
+        document.getElementById("factorial_result").innerText = "Invalid input. Ensure n >= 0.";
+        return;
+      }
+
+      const result = factorial(n);
+      document.getElementById("factorial_result").innerText = `Result: ${result}`;
+    }
+
+    // Factorial Helper Function
+    function factorial(num) {
+      if (num === 0 || num === 1) return 1;
+      let result = 1;
+      for (let i = 2; i <= num; i++) {
+        result *= i;
+      }
+      return result;
+    }
+  </script>
+</body>
+</html>

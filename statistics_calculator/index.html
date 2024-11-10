@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Statistics Calculator</title>
+  <style>
+    /* General Reset */
+    body, h1, h2, p, input, button, textarea {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f7f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* Header */
+    header {
+      background-color: #004e92;
+      color: #ffffff;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+      max-width: 800px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    /* Main Section */
+    main {
+      background-color: #ffffff;
+      padding: 20px;
+      width: 100%;
+      max-width: 800px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #004e92;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+    }
+
+    .calculator {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+    }
+
+    label {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #004e92;
+    }
+
+    textarea, input {
+      width: 100%;
+      max-width: 300px;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-top: 5px;
+    }
+
+    button {
+      padding: 12px 18px;
+      background-color: #004e92;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #00376b;
+      transform: translateY(-3px);
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #e5f1ff;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 1rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        padding: 1.5rem 1rem;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      main {
+        padding: 15px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Advanced Statistics Calculator</h1>
+  </header>
+
+  <main>
+    <h2>Enter Your Data</h2>
+    <div class="calculator">
+      <label for="data">Data (comma-separated):</label>
+      <textarea id="data" rows="3" placeholder="e.g., 10, 20, 30, 40"></textarea>
+      <button onclick="calculateStats()">Calculate Statistics</button>
+    </div>
+    <div class="result" id="result">Result: --</div>
+  </main>
+
+  <script>
+    function calculateStats() {
+      const dataInput = document.getElementById('data').value;
+      if (!dataInput.trim()) {
+        document.getElementById('result').innerText = "Please enter valid data.";
+        return;
+      }
+
+      const data = dataInput.split(',').map(Number).filter(val => !isNaN(val));
+      if (data.length === 0) {
+        document.getElementById('result').innerText = "No valid numbers entered.";
+        return;
+      }
+
+      const n = data.length;
+      const mean = (data.reduce((a, b) => a + b, 0) / n).toFixed(2);
+
+      const sortedData = data.slice().sort((a, b) => a - b);
+      const median = (n % 2 === 0) 
+        ? ((sortedData[n / 2 - 1] + sortedData[n / 2]) / 2).toFixed(2) 
+        : sortedData[Math.floor(n / 2)].toFixed(2);
+
+      const mode = getMode(data).join(', ');
+      const variance = (data.reduce((acc, val) => acc + Math.pow(val - mean, 2), 0) / n).toFixed(2);
+      const stdDeviation = Math.sqrt(variance).toFixed(2);
+      const range = (Math.max(...data) - Math.min(...data)).toFixed(2);
+
+      document.getElementById('result').innerHTML = `
+        <strong>Mean:</strong> ${mean}<br>
+        <strong>Median:</strong> ${median}<br>
+        <strong>Mode:</strong> ${mode || 'None'}<br>
+        <strong>Variance:</strong> ${variance}<br>
+        <strong>Standard Deviation:</strong> ${stdDeviation}<br>
+        <strong>Range:</strong> ${range}<br>
+      `;
+    }
+
+    function getMode(data) {
+      const frequency = {};
+      data.forEach(num => frequency[num] = (frequency[num] || 0) + 1);
+
+      const maxFreq = Math.max(...Object.values(frequency));
+      const modes = Object.keys(frequency).filter(key => frequency[key] === maxFreq);
+
+      return maxFreq > 1 ? modes : [];
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Histogram and Boxplot Generator</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* General Reset */
+    body, h1, h2, p, input, button {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f7f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+      margin: 0;
+      min-height: 100vh;
+      height: auto;
+    }
+
+    /* Header */
+    header {
+      background-color: #004e92;
+      color: #ffffff;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+      max-width: 800px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    header p {
+      font-size: 1.2rem;
+    }
+
+    /* Main Section */
+    main {
+      background-color: #ffffff;
+      padding: 20px;
+      width: 100%;
+      max-width: 800px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #004e92;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+    }
+
+    .input-group {
+      margin: 15px 0;
+    }
+
+    label {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #004e92;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-top: 5px;
+      width: 100%;
+      max-width: 350px;
+    }
+
+    button {
+      padding: 12px 18px;
+      background-color: #004e92;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #00376b;
+      transform: translateY(-3px);
+    }
+
+    canvas {
+      margin-top: 30px;
+      max-width: 100%;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #ffffff;
+      color: #004e92;
+      width: 100%;
+      border-radius: 10px;
+      margin-top: 40px;
+      box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.1);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        padding: 1.5rem 1rem;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      main {
+        padding: 15px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      input {
+        max-width: 250px;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Histogram and Boxplot Generator</h1>
+  </header>
+
+  <main>
+    <h2>Generate a Histogram and Boxplot</h2>
+    <div class="input-group">
+      <label for="data-input">Enter dataset (comma-separated values):</label>
+      <input type="text" id="data-input" placeholder="e.g., 1, 2, 3, 4, 5, 6, 7">
+    </div>
+
+    <button onclick="generateCharts()">Generate Charts</button>
+
+    <h2>Histogram</h2>
+    <canvas id="histogram-canvas" width="400" height="300"></canvas>
+
+    <h2>Boxplot</h2>
+    <canvas id="boxplot-canvas" width="400" height="300"></canvas>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Histogram and Boxplot Generator</p>
+  </footer>
+
+  <script>
+    function generateCharts() {
+      const data = document.getElementById('data-input').value.split(',').map(Number);
+
+      if (data.length < 1) {
+        alert("Please enter a valid dataset.");
+        return;
+      }
+
+      // Create Histogram
+      const histogramData = createHistogram(data);
+      createHistogramChart(histogramData);
+
+      // Create Boxplot
+      const boxplotData = createBoxplot(data);
+      createBoxplotChart(boxplotData);
+    }
+
+    // Function to create Histogram Data
+    function createHistogram(data) {
+      const bins = Math.ceil(Math.sqrt(data.length));
+      const histogram = new Array(bins).fill(0);
+      const max = Math.max(...data);
+      const min = Math.min(...data);
+      const binSize = (max - min) / bins;
+
+      data.forEach(value => {
+        const binIndex = Math.floor((value - min) / binSize);
+        if (binIndex === bins) {
+          histogram[bins - 1]++;
+        } else {
+          histogram[binIndex]++;
+        }
+      });
+
+      return {
+        labels: Array.from({ length: bins }, (_, i) => `${(min + i * binSize).toFixed(2)} - ${(min + (i + 1) * binSize).toFixed(2)}`),
+        datasets: [{
+          label: 'Frequency',
+          data: histogram,
+          backgroundColor: '#004e92',
+        }]
+      };
+    }
+
+    // Create Histogram Chart
+    function createHistogramChart(data) {
+      const ctx = document.getElementById('histogram-canvas').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: data,
+        options: {
+          responsive: true,
+          scales: {
+            x: { 
+              title: { display: true, text: 'Bins' } 
+            },
+            y: { 
+              title: { display: true, text: 'Frequency' } 
+            }
+          }
+        }
+      });
+    }
+
+    // Function to create Boxplot Data
+    function createBoxplot(data) {
+      return {
+        labels: ['Data'],
+        datasets: [{
+          label: 'Boxplot',
+          data: [
+            { 
+              min: Math.min(...data),
+              q1: percentile(data, 25),
+              median: percentile(data, 50),
+              q3: percentile(data, 75),
+              max: Math.max(...data)
+            }
+          ],
+          backgroundColor: '#004e92',
+        }]
+      };
+    }
+
+    // Create Boxplot Chart
+    function createBoxplotChart(data) {
+      const ctx = document.getElementById('boxplot-canvas').getContext('2d');
+      new Chart(ctx, {
+        type: 'boxplot',
+        data: data,
+        options: {
+          responsive: true
+        }
+      });
+    }
+
+    // Helper function to calculate percentiles
+    function percentile(data, p) {
+      const sorted = [...data].sort((a, b) => a - b);
+      const index = (p / 100) * (sorted.length - 1);
+      if (index % 1 === 0) {
+        return sorted[index];
+      } else {
+        const lower = sorted[Math.floor(index)];
+        const upper = sorted[Math.ceil(index)];
+        return lower + (upper - lower) * (index % 1);
+      }
+    }
+  </script>
+</body>
+</html>

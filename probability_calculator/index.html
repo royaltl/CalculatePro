@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Probability Calculator</title>
+  <style>
+    /* General Reset */
+    body, h1, h2, p, input, button {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f7f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* Header */
+    header {
+      background-color: #004e92;
+      color: #ffffff;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+      max-width: 800px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    /* Main Section */
+    main {
+      background-color: #ffffff;
+      padding: 20px;
+      width: 100%;
+      max-width: 800px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #004e92;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+    }
+
+    .calculator {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+    }
+
+    label {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #004e92;
+    }
+
+    input {
+      width: 100%;
+      max-width: 300px;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-top: 5px;
+    }
+
+    button {
+      padding: 12px 18px;
+      background-color: #004e92;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #00376b;
+      transform: translateY(-3px);
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #e5f1ff;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 1rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        padding: 1.5rem 1rem;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      main {
+        padding: 15px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Advanced Probability Calculator</h1>
+  </header>
+
+  <main>
+    <h2>Calculate Probabilities</h2>
+    <div class="calculator">
+      <div>
+        <label for="prob-a">P(A):</label>
+        <input type="number" id="prob-a" placeholder="Probability of A" min="0" max="1" step="0.01">
+      </div>
+      <div>
+        <label for="prob-b">P(B):</label>
+        <input type="number" id="prob-b" placeholder="Probability of B" min="0" max="1" step="0.01">
+      </div>
+      <div>
+        <label for="prob-cond">P(A|B):</label>
+        <input type="number" id="prob-cond" placeholder="Conditional Probability P(A|B)" min="0" max="1" step="0.01">
+      </div>
+      <div>
+        <label for="prob-intersect">P(A ∩ B):</label>
+        <input type="number" id="prob-intersect" placeholder="Intersection Probability P(A ∩ B)" min="0" max="1" step="0.01">
+      </div>
+      <div>
+        <label for="prob-union">P(A ∪ B):</label>
+        <input type="number" id="prob-union" placeholder="Union Probability P(A ∪ B)" min="0" max="1" step="0.01">
+      </div>
+      <button onclick="calculateAll()">Calculate</button>
+    </div>
+    <div class="result" id="result">Result: --</div>
+  </main>
+
+  <script>
+    function calculateAll() {
+      const probA = parseFloat(document.getElementById('prob-a').value) || 0;
+      const probB = parseFloat(document.getElementById('prob-b').value) || 0;
+      const probCond = parseFloat(document.getElementById('prob-cond').value) || 0;
+      const probIntersect = parseFloat(document.getElementById('prob-intersect').value) || 0;
+      const probUnion = parseFloat(document.getElementById('prob-union').value) || 0;
+
+      let results = [];
+
+      if (probA && probB) {
+        results.push(`Independent Probability: P(A ∩ B) = ${(probA * probB).toFixed(2)}`);
+      }
+      if (probA && probCond) {
+        results.push(`Conditional Probability: P(A ∩ B) = ${(probA * probCond).toFixed(2)}`);
+      }
+      if (probA && probB && probUnion) {
+        results.push(`Union: P(A ∪ B) = ${(probA + probB - probIntersect).toFixed(2)}`);
+      }
+      if (probA) {
+        results.push(`Complement: P(¬A) = ${(1 - probA).toFixed(2)}`);
+      }
+
+      if (results.length === 0) {
+        results.push("Please enter valid values for at least one calculation.");
+      }
+
+      document.getElementById('result').innerHTML = results.join('<br>');
+    }
+  </script>
+</body>
+</html>

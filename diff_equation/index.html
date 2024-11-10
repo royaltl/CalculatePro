@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Differential Equation Solver</title>
+  <style>
+    /* General Reset */
+    body, h1, h2, p, input, button {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f7f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    /* Header */
+    header {
+      background-color: #004e92;
+      color: #ffffff;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+      max-width: 800px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    /* Main Section */
+    main {
+      background-color: #ffffff;
+      padding: 20px;
+      width: 100%;
+      max-width: 800px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #004e92;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+    }
+
+    .equation-input {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+    }
+
+    label {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #004e92;
+    }
+
+    input, select {
+      width: 100%;
+      max-width: 350px;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-top: 5px;
+    }
+
+    button {
+      padding: 12px 18px;
+      background-color: #004e92;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #00376b;
+      transform: translateY(-3px);
+    }
+
+    p#result {
+      margin-top: 10px;
+      font-size: 1.2rem;
+      color: #004e92;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        padding: 1.5rem 1rem;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      main {
+        padding: 15px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      input, select {
+        width: 100%;
+        max-width: 250px;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Differential Equation Solver</h1>
+  </header>
+
+  <main>
+    <h2>Solving Differential Equations</h2>
+    <div class="equation-input">
+      <label for="equation">Enter Differential Equation (e.g., dy/dx = x + y):</label>
+      <input type="text" id="equation" placeholder="dy/dx = x + y">
+
+      <label for="type">Select Equation Type:</label>
+      <select id="type">
+        <option value="first-order">First-Order Equation</option>
+        <option value="second-order">Second-Order Equation</option>
+      </select>
+
+      <label for="initial-condition">Initial Condition (optional, for first-order only):</label>
+      <input type="text" id="initial-condition" placeholder="y(0) = 1">
+
+      <button onclick="solveEquation()">Solve Equation</button>
+
+      <p id="result"></p>
+    </div>
+  </main>
+
+  <script>
+    function solveEquation() {
+      const equation = document.getElementById('equation').value;
+      const equationType = document.getElementById('type').value;
+      const initialCondition = document.getElementById('initial-condition').value;
+      const resultField = document.getElementById('result');
+
+      if (!equation) {
+        resultField.textContent = "Please enter a valid differential equation.";
+        return;
+      }
+
+      let result = '';
+
+      // For first-order equations (dy/dx = f(x, y))
+      if (equationType === 'first-order') {
+        const firstOrderMatch = equation.match(/^dy\/dx\s*=\s*(.+)$/);
+        if (firstOrderMatch) {
+          result = `First-Order Solution: Integrate the function. Initial condition: ${initialCondition}`;
+        } else {
+          result = "Invalid first-order equation format. Example: dy/dx = x + y";
+        }
+      }
+
+      // For second-order equations (d^2y/dx^2 = f(x, y, dy/dx))
+      else if (equationType === 'second-order') {
+        const secondOrderMatch = equation.match(/^d\^2y\/dx\^2\s*=\s*(.+)$/);
+        if (secondOrderMatch) {
+          result = `Second-Order Solution: Integrate the equation twice. Initial conditions: ${initialCondition}`;
+        } else {
+          result = "Invalid second-order equation format. Example: d^2y/dx^2 = x^2 + y + dy/dx";
+        }
+      }
+
+      resultField.textContent = result;
+    }
+  </script>
+</body>
+</html>

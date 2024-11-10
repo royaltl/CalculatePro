@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fourier Transform Visualizer</title>
+  <style>
+    /* General Reset */
+    body, h1, h2, p, input, button {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f7f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex-direction: column;
+      padding: 20px;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    /* Header */
+    header {
+      background-color: #004e92;
+      color: #ffffff;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+      max-width: 800px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    header p {
+      font-size: 1.2rem;
+    }
+
+    /* Main Section */
+    main {
+      background-color: #ffffff;
+      padding: 20px;
+      width: 100%;
+      max-width: 800px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #004e92;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+    }
+
+    .input-group {
+      margin: 15px 0;
+    }
+
+    label {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #004e92;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-top: 5px;
+      width: 100%;
+      max-width: 350px;
+    }
+
+    button {
+      padding: 12px 18px;
+      background-color: #004e92;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #00376b;
+      transform: translateY(-3px);
+    }
+
+    canvas {
+      margin-top: 30px;
+      max-width: 100%;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #ffffff;
+      color: #004e92;
+      width: 100%;
+      border-radius: 10px;
+      margin-top: 40px;
+      box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.1);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        padding: 1.5rem 1rem;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      main {
+        padding: 15px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      input {
+        max-width: 250px;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Fourier Transform Visualizer</h1>
+  </header>
+
+  <main>
+    <h2>Input Signal and Visualize Fourier Transform</h2>
+    <div class="input-group">
+      <label for="signal-input">Enter a signal (comma-separated values):</label>
+      <input type="text" id="signal-input" placeholder="e.g., 0, 1, 2, 3, 4, 5, 6, 7">
+    </div>
+
+    <button onclick="visualizeFourier()">Visualize Fourier Transform</button>
+
+    <h2>Time Domain</h2>
+    <canvas id="time-domain-canvas" width="400" height="300"></canvas>
+
+    <h2>Frequency Domain</h2>
+    <canvas id="frequency-domain-canvas" width="400" height="300"></canvas>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Fourier Transform Visualizer</p>
+  </footer>
+
+  <script>
+    function visualizeFourier() {
+      const signal = document.getElementById('signal-input').value.split(',').map(Number);
+
+      if (signal.length < 2) {
+        alert("Please enter at least two data points.");
+        return;
+      }
+
+      // Calculate the Discrete Fourier Transform (DFT)
+      const dft = computeDFT(signal);
+
+      // Visualize the time-domain signal
+      drawTimeDomainSignal(signal);
+
+      // Visualize the frequency-domain signal (magnitude of DFT)
+      drawFrequencyDomain(dft);
+    }
+
+    function computeDFT(signal) {
+      const N = signal.length;
+      const dft = [];
+      for (let k = 0; k < N; k++) {
+        let real = 0;
+        let imag = 0;
+        for (let n = 0; n < N; n++) {
+          const angle = (2 * Math.PI * k * n) / N;
+          real += signal[n] * Math.cos(angle);
+          imag -= signal[n] * Math.sin(angle);
+        }
+        dft.push({ real, imag });
+      }
+      return dft;
+    }
+
+    function drawTimeDomainSignal(signal) {
+      const canvas = document.getElementById('time-domain-canvas');
+      const ctx = canvas.getContext('2d');
+      const width = canvas.width;
+      const height = canvas.height;
+      const step = width / signal.length;
+      
+      ctx.clearRect(0, 0, width, height);
+
+      ctx.beginPath();
+      ctx.moveTo(0, height - signal[0]);
+      for (let i = 1; i < signal.length; i++) {
+        ctx.lineTo(i * step, height - signal[i]);
+      }
+      ctx.strokeStyle = '#004e92';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    function drawFrequencyDomain(dft) {
+      const canvas = document.getElementById('frequency-domain-canvas');
+      const ctx = canvas.getContext('2d');
+      const width = canvas.width;
+      const height = canvas.height;
+      const step = width / dft.length;
+      
+      ctx.clearRect(0, 0, width, height);
+
+      ctx.beginPath();
+      dft.forEach((point, i) => {
+        const magnitude = Math.sqrt(point.real * point.real + point.imag * point.imag);
+        ctx.lineTo(i * step, height - magnitude);
+      });
+      ctx.strokeStyle = '#004e92';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+  </script>
+</body>
+</html>

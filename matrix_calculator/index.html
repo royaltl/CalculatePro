@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Matrix Calculator</title>
+  <style>
+    /* General Reset */
+    body, h1, h2, p, input, button, select {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f7f9fc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    header {
+      background-color: #004e92;
+      color: #ffffff;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+    }
+
+    /* Matrix Calculator Section */
+    .matrix-calculator {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      max-width: 800px;
+      width: 100%;
+    }
+
+    h2 {
+      color: #004e92;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .matrix-inputs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    .actions, .result {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    button, select {
+      padding: 12px 18px;
+      background-color: #004e92;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin: 5px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover, select:hover {
+      background-color: #00376b;
+      transform: translateY(-3px);
+    }
+
+    select {
+      width: 100%;
+      padding: 10px;
+    }
+
+    .result {
+      background-color: #e5f1ff;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      word-wrap: break-word;
+    }
+
+    @media (max-width: 768px) {
+      .matrix-inputs {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Advanced Matrix Calculator</h1>
+  </header>
+
+  <div class="matrix-calculator">
+    <h2>Perform Matrix Operations</h2>
+
+    <div>
+      <label for="matrix-size">Matrix Size:</label>
+      <select id="matrix-size">
+        <option value="2">2x2</option>
+        <option value="3">3x3</option>
+        <option value="4">4x4</option>
+      </select>
+    </div>
+
+    <div class="matrix-inputs" id="matrixA">
+      <!-- Matrix A Inputs will be dynamically added here -->
+    </div>
+    <div class="matrix-inputs" id="matrixB">
+      <!-- Matrix B Inputs will be dynamically added here -->
+    </div>
+
+    <div class="actions">
+      <button onclick="performOperation('add')">Add</button>
+      <button onclick="performOperation('subtract')">Subtract</button>
+      <button onclick="performOperation('multiply')">Multiply</button>
+      <button onclick="performOperation('transpose')">Transpose</button>
+      <button onclick="performOperation('determinant')">Determinant</button>
+      <button onclick="clearInputs()">Clear</button>
+    </div>
+
+    <div class="result" id="result">Result: --</div>
+  </div>
+
+  <script>
+    // Initialize matrices on load
+    document.getElementById('matrix-size').addEventListener('change', generateMatrices);
+    generateMatrices();
+
+    function generateMatrices() {
+      const size = parseInt(document.getElementById('matrix-size').value);
+      const matrixA = document.getElementById('matrixA');
+      const matrixB = document.getElementById('matrixB');
+      matrixA.innerHTML = '<h3>Matrix A</h3>';
+      matrixB.innerHTML = '<h3>Matrix B</h3>';
+
+      for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size; j++) {
+          matrixA.innerHTML += `<input type="number" id="a-${i}-${j}" placeholder="A${i + 1}${j + 1}">`;
+          matrixB.innerHTML += `<input type="number" id="b-${i}-${j}" placeholder="B${i + 1}${j + 1}">`;
+        }
+      }
+    }
+
+    function performOperation(operation) {
+      const size = parseInt(document.getElementById('matrix-size').value);
+      let matrixA = [];
+      let matrixB = [];
+      for (let i = 0; i < size; i++) {
+        matrixA.push([]);
+        matrixB.push([]);
+        for (let j = 0; j < size; j++) {
+          matrixA[i].push(parseFloat(document.getElementById(`a-${i}-${j}`).value) || 0);
+          matrixB[i].push(parseFloat(document.getElementById(`b-${i}-${j}`).value) || 0);
+        }
+      }
+
+      let result;
+      switch (operation) {
+        case 'add':
+          result = addMatrices(matrixA, matrixB);
+          break;
+        case 'subtract':
+          result = subtractMatrices(matrixA, matrixB);
+          break;
+        case 'multiply':
+          result = multiplyMatrices(matrixA, matrixB);
+          break;
+        case 'transpose':
+          result = transposeMatrix(matrixA);
+          break;
+        case 'determinant':
+          result = `Determinant of Matrix A: ${determinant(matrixA)}`;
+          break;
+      }
+      document.getElementById('result').innerText = `Result: ${JSON.stringify(result)}`;
+    }
+
+    function addMatrices(a, b) {
+      return a.map((row, i) => row.map((val, j) => val + b[i][j]));
+    }
+
+    function subtractMatrices(a, b) {
+      return a.map((row, i) => row.map((val, j) => val - b[i][j]));
+    }
+
+    function multiplyMatrices(a, b) {
+      let size = a.length;
+      let result = Array(size).fill(0).map(() => Array(size).fill(0));
+      for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size; j++) {
+          for (let k = 0; k < size; k++) {
+            result[i][j] += a[i][k] * b[k][j];
+          }
+        }
+      }
+      return result;
+    }
+
+    function transposeMatrix(a) {
+      return a[0].map((_, colIndex) => a.map(row => row[colIndex]));
+    }
+
+    function determinant(matrix) {
+      const size = matrix.length;
+      if (size === 2) return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+      let det = 0;
+      for (let i = 0; i < size; i++) {
+        det += matrix[0][i] * cofactor(matrix, 0, i);
+      }
+      return det;
+    }
+
+    function cofactor(matrix, row, col) {
+      const minor = matrix
+        .filter((_, r) => r !== row)
+        .map(r => r.filter((_, c) => c !== col));
+      return Math.pow(-1, row + col) * determinant(minor);
+    }
+
+    function clearInputs() {
+      document.querySelectorAll('input').forEach(input => input.value = '');
+      document.getElementById('result').innerText = 'Result: --';
+    }
+  </script>
+</body>
+</html>
